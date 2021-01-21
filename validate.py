@@ -12,8 +12,8 @@ from json import encoder
 with open('config.json') as config_json:
     config = json.load(config_json)
 
-if config['tractmeasures'] is None:
-    print("tractmeasures is not set in config.json")
+if config['csv'] is None:
+    print("csv is not set in config.json")
     sys.exit(1)
 
 results = {
@@ -30,12 +30,12 @@ if not os.path.exists("secondary"):
 
 if not os.path.exists("output"):
     os.mkdir("output")
-    os.symlink("../"+config["tractmeasures"], "output/output_FiberStats.csv")
+    os.symlink("../"+config["csv"], "output/output_FiberStats.csv")
 
-if not os.path.exists(config["tractmeasures"]):
-    results["errors"].append("tractmeasures(output_FiberStats.csv) file does not exist")
+if not os.path.exists(config["csv"]):
+    results["errors"].append("csv(output_FiberStats.csv) file does not exist")
 else:
-    csv = pandas.read_csv(config["tractmeasures"])
+    csv = pandas.read_csv(config["csv"])
     results["meta"]["structureIDs"] = csv.structureID.unique().tolist()
     
     #csv.to_csv("output/output_FiberStats.csv", index=False, na_rep='NaN')

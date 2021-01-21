@@ -1,4 +1,4 @@
 {
-    "tractmeasures": "testdata/output_FiberStats.csv"
+    "csv": "testdata/output_FiberStats.csv"
 }
 
