@@ -36,10 +36,9 @@ if not os.path.exists(config["csv"]):
     results["errors"].append("csv(output_FiberStats.csv) file does not exist")
 else:
     csv = pandas.read_csv(config["csv"])
-    results["meta"]["structureIDs"] = csv.structureID.unique().tolist()
-    
-    #csv.to_csv("output/output_FiberStats.csv", index=False, na_rep='NaN')
-    csv.to_csv("secondary/output_FiberStats.csv", index=False, na_rep='NaN', float_format="%.6f")
+
+    #results["meta"]["structureIDs"] = csv.structureID.unique().tolist()
+    #csv.to_csv("secondary/output_FiberStats.csv", index=False, na_rep='NaN', float_format="%.6f")
 
 with open("product.json", "w") as fp:
     json.dump(results, fp)
