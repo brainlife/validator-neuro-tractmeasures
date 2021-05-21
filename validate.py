@@ -27,18 +27,25 @@ results = {
 
 if not os.path.exists("secondary"):
     os.mkdir("secondary")
-
 if not os.path.exists("output"):
     os.mkdir("output")
-    os.symlink("../"+config["csv"], "output/tractmeasures.csv")
 
-if "output_FiberStats.csv" in config["csv"]:
-    results["warnings"].append("output contains outdated file name 'output_FiberStats.csv'. App should be updated to output 'tractmeasures.csv' instead.")
+#backward compatibility - #if csv doesn't exist where we expect, then try the old name
+if not os.path.exists(config["csv"]):
+    oldname = os.path.dirname(config["csv"])+"/output_FiberStats.csv"
+    if os.path.exists(oldname):
+        results["warnings"].append("output contains outdated file name 'output_FiberStats.csv'. App should be updated to output 'tractmeasures.csv' instead.")
+        config["csv"] = oldname
 
+#if it doesn't exist still, then no good
 if not os.path.exists(config["csv"]):
     results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
+    if not os.path.exists("output/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+
     csv = pandas.read_csv(config["csv"])
+    #TODO..
 
 with open("product.json", "w") as fp:
     json.dump(results, fp)
