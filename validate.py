@@ -30,15 +30,15 @@ if not os.path.exists("secondary"):
 
 if not os.path.exists("output"):
     os.mkdir("output")
-    os.symlink("../"+config["csv"], "output/output_FiberStats.csv")
+    os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+
+if "output_FiberStats.csv" in config["csv"]:
+    results["warnings"].append("output contains outdated file name 'output_FiberStats.csv'. App should be updated to output 'tractmeasures.csv' instead.")
 
 if not os.path.exists(config["csv"]):
-    results["errors"].append("csv(output_FiberStats.csv) file does not exist")
+    results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
     csv = pandas.read_csv(config["csv"])
-
-    #results["meta"]["structureIDs"] = csv.structureID.unique().tolist()
-    #csv.to_csv("secondary/output_FiberStats.csv", index=False, na_rep='NaN', float_format="%.6f")
 
 with open("product.json", "w") as fp:
     json.dump(results, fp)
