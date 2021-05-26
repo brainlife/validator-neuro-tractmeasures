@@ -62,6 +62,8 @@ if not os.path.exists(config["csv"]):
 else:
     if not os.path.exists("output/tractmeasures.csv"):
         os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+    if not os.path.exists("secondary/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
 
     refStructures = {}
     with open('reference/tractmeasures_references_v1.json') as reference_json:
