@@ -68,9 +68,8 @@ else:
     #nothing to store in secondary(ui) at the moment
     #if not os.path.exists("secondary/tractmeasures.csv"):
     #    os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
-
-    except:
-        results["errors"].append(str(sys.exc_info()))
+    #except:
+    #    results["errors"].append(str(sys.exc_info()))
 
 print("saving proeuct.json")
 with open("product.json", "w") as fp:
