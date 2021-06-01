@@ -6,6 +6,7 @@ import json
 import shutil
 import pandas
 import numpy
+import csv
 
 from json import encoder
 
@@ -23,25 +24,6 @@ results = {
     "datatype_tags": [], 
     "tags": [], 
     "meta": { "structureIDs": [] } 
-}
-
-columns = {
-    "fa": {
-        "title": "FA (Fractional Anisotropy)",
-        "unit": "Normalized fraction of anisotropic component"
-    },
-    "ad": {
-        "title": "AD (Axial Diffusivity)",
-        "unit": "microm^2/msec",
-    },
-    "md": {
-        "title": "MD (Mean Diffusivity)",
-        "unit": "microm^2/msec",
-    },
-    "rd": {
-        "title": "RD (Radial Diffusivity)",
-        "unit": "microm^2/msec",
-    }
 }
 
 if not os.path.exists("output"):
@@ -62,14 +44,30 @@ if not os.path.exists(config["csv"]):
     results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
     #let's just by-pass tractmeausres.csv (nothing to do)
-    if not os.path.exists("output/tractmeasures.csv"):
-        os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+    #if not os.path.exists("output/tractmeasures.csv"):
+    #    os.symlink("../"+config["csv"], "output/tractmeasures.csv")
 
     #nothing to store in secondary(ui) at the moment
     #if not os.path.exists("secondary/tractmeasures.csv"):
     #    os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
     #except:
     #    results["errors"].append(str(sys.exc_info()))
+
+    with open(config["csv"]) as csvfile:
+        reader = csv.reader(csvfile)
+        header = next(reader, None)
+
+        for i,col in enumerate(header):
+            if col.endswith("_mean"):
+                short=col[0:-5]
+                header[i] = short
+                results["warnings"].append("updating column name '%s' to '%s' "%(col, short))
+
+        with open("output/tractmeasures.csv", "w") as outcsvfile:
+            writer = csv.writer(outcsvfile)
+            writer.writerow(header)
+            for row in reader:
+                writer.writerow(row)
 
 print("saving proeuct.json")
 with open("product.json", "w") as fp:
