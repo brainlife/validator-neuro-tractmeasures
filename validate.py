@@ -43,31 +43,27 @@ if not os.path.exists(config["csv"]):
 if not os.path.exists(config["csv"]):
     results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
+
+    #with open(config["csv"]) as csvfile:
+    #    reader = csv.reader(csvfile)
+    #    header = next(reader, None)
+
+    #    for i,col in enumerate(header):
+    #        if col.endswith("_mean"):
+    #            short=col[0:-5]
+    #            header[i] = short
+    #            results["warnings"].append("updating column name '%s' to '%s' "%(col, short))
+
+    #    with open("output/tractmeasures.csv", "w") as outcsvfile:
+    #        writer = csv.writer(outcsvfile)
+    #        writer.writerow(header)
+    #        for row in reader:
+    #            writer.writerow(row)
+
     #let's just by-pass tractmeausres.csv (nothing to do)
-    #if not os.path.exists("output/tractmeasures.csv"):
-    #    os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+    if not os.path.exists("output/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "output/tractmeasures.csv")
 
-    #nothing to store in secondary(ui) at the moment
-    #if not os.path.exists("secondary/tractmeasures.csv"):
-    #    os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
-    #except:
-    #    results["errors"].append(str(sys.exc_info()))
-
-    with open(config["csv"]) as csvfile:
-        reader = csv.reader(csvfile)
-        header = next(reader, None)
-
-        for i,col in enumerate(header):
-            if col.endswith("_mean"):
-                short=col[0:-5]
-                header[i] = short
-                results["warnings"].append("updating column name '%s' to '%s' "%(col, short))
-
-        with open("output/tractmeasures.csv", "w") as outcsvfile:
-            writer = csv.writer(outcsvfile)
-            writer.writerow(header)
-            for row in reader:
-                writer.writerow(row)
 
 print("saving proeuct.json")
 with open("product.json", "w") as fp:
