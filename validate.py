@@ -64,6 +64,9 @@ else:
     if not os.path.exists("output/tractmeasures.csv"):
         os.symlink("../"+config["csv"], "output/tractmeasures.csv")
 
+    #we also want to copy it to secondary 
+    if not os.path.exists("secondary/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
 
 print("saving proeuct.json")
 with open("product.json", "w") as fp:
