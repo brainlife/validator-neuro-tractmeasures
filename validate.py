@@ -6,6 +6,7 @@ import json
 import shutil
 import pandas
 import numpy
+import csv
 
 from json import encoder
 
@@ -25,21 +26,49 @@ results = {
     "meta": { "structureIDs": [] } 
 }
 
+if not os.path.exists("output"):
+    os.mkdir("output")
+
 if not os.path.exists("secondary"):
     os.mkdir("secondary")
 
-if not os.path.exists("output"):
-    os.mkdir("output")
-    os.symlink("../"+config["csv"], "output/output_FiberStats.csv")
-
+#backward compatibility - #if csv doesn't exist where we expect, then try the old name
 if not os.path.exists(config["csv"]):
-    results["errors"].append("csv(output_FiberStats.csv) file does not exist")
+    oldname = os.path.dirname(config["csv"])+"/output_FiberStats.csv"
+    if os.path.exists(oldname):
+        results["warnings"].append("output contains outdated file name 'output_FiberStats.csv'. App should be updated to output 'tractmeasures.csv' instead.")
+        config["csv"] = oldname
+
+#if it doesn't exist still, then no good
+if not os.path.exists(config["csv"]):
+    results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
-    csv = pandas.read_csv(config["csv"])
 
-    #results["meta"]["structureIDs"] = csv.structureID.unique().tolist()
-    #csv.to_csv("secondary/output_FiberStats.csv", index=False, na_rep='NaN', float_format="%.6f")
+    #with open(config["csv"]) as csvfile:
+    #    reader = csv.reader(csvfile)
+    #    header = next(reader, None)
 
+    #    for i,col in enumerate(header):
+    #        if col.endswith("_mean"):
+    #            short=col[0:-5]
+    #            header[i] = short
+    #            results["warnings"].append("updating column name '%s' to '%s' "%(col, short))
+
+    #    with open("output/tractmeasures.csv", "w") as outcsvfile:
+    #        writer = csv.writer(outcsvfile)
+    #        writer.writerow(header)
+    #        for row in reader:
+    #            writer.writerow(row)
+
+    #let's just by-pass tractmeausres.csv (nothing to do)
+    if not os.path.exists("output/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "output/tractmeasures.csv")
+
+    #we also want to copy it to secondary 
+    if not os.path.exists("secondary/tractmeasures.csv"):
+        os.symlink("../"+config["csv"], "secondary/tractmeasures.csv")
+
+print("saving proeuct.json")
 with open("product.json", "w") as fp:
     json.dump(results, fp)
 
