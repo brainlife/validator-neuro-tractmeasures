@@ -43,7 +43,7 @@ if not os.path.exists(config["csv"]):
 if not os.path.exists(config["csv"]):
     results["errors"].append("csv[%s] file does not exist" % config["csv"])
 else:
-    tmp = pd.read_csv(config["csv"])
+    tmp = pandas.read_csv(config["csv"])
     if 'avgerageStreamlineLength' in tmp.keys():
         tmp.rename(columns={'avgerageStreamlineLength': 'averageStreamlineLength'},inplace=True)
         tmp.to_csv("output/tractmeasures.csv",index=False)
